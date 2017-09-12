@@ -38,7 +38,12 @@ global.socket = initSocket();
 
 const component = (
   <Router
-    render={(props) => <ReduxAsyncConnect {...props} helpers={{ client }} filter={item => !item.deferred} />}
+    render={(props) =>
+      <ReduxAsyncConnect
+        {...props}
+        helpers={{ client }}
+        filter={item => !item.deferred}
+      />}
     history={history}
   >
     {getRoutes(store)}
@@ -46,14 +51,17 @@ const component = (
 );
 
 ReactDOM.render(
-  <Provider store={store} key="provider">
+  <Provider
+    store={store}
+    key="provider"
+  >
     {component}
   </Provider>,
   dest
 );
 
 if (process.env.NODE_ENV !== 'production') {
-  window.React = React; // enable debugger
+  window.React = React;
 
   if (!dest || !dest.firstChild || !dest.firstChild.attributes || !dest.firstChild.attributes['data-react-checksum']) {
     console.error('Server-side React render was discarded. Make sure that your initial render does not contain any client-side code.');
@@ -63,7 +71,10 @@ if (process.env.NODE_ENV !== 'production') {
 if (__DEVTOOLS__ && !window.devToolsExtension) {
   const DevTools = require('./containers/DevTools/DevTools');
   ReactDOM.render(
-    <Provider store={store} key="provider">
+    <Provider
+      store={store}
+      key="provider"
+    >
       <div>
         {component}
         <DevTools />
