@@ -11,11 +11,10 @@ const webpackIsomorphicToolsPlugin = new WebpackIsomorphicToolsPlugin(require('.
 
 module.exports = {
   devtool: 'source-map',
-  context: path.resolve(__dirname, '..'),
+  context: path.resolve(__dirname, '../'),
   entry: {
     'main': [
-      'font-awesome-webpack!./src/theme/font-awesome.config.prod.js',
-      './src/client.js'
+      'src/client.js',
     ]
   },
   output: {
@@ -70,7 +69,6 @@ module.exports = {
       }
     ]
   },
-  progress: true,
   resolve: {
     modules: [
       'src',

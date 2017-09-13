@@ -3,6 +3,7 @@ require('babel-polyfill');
 const fs = require('fs');
 const path = require('path');
 const webpack = require('webpack');
+const assetsPath = path.resolve(__dirname, '../static/dist');
 const host = (process.env.HOST || 'localhost');
 const port = (+process.env.PORT + 1) || 3001;
 const WebpackIsomorphicToolsPlugin = require('webpack-isomorphic-tools/plugin'); // https://github.com/halt-hammerzeit/webpack-isomorphic-tools
@@ -29,12 +30,11 @@ module.exports = {
   entry: {
     'main': [
       'webpack-hot-middleware/client?path=http://' + host + ':' + port + '/__webpack_hmr',
-      'font-awesome-webpack!./src/theme/font-awesome.config.js',
-      './src/client.js'
+      './src/client.js',
     ]
   },
   output: {
-    path: path.resolve(__dirname, '../static/dist'),
+    path: assetsPath,
     filename: '[name]-[hash].js',
     chunkFilename: '[name]-[chunkhash].js',
     publicPath: 'http://' + host + ':' + port + '/dist/'
@@ -76,7 +76,6 @@ module.exports = {
       }
     ]
   },
-  progress: true,
   resolve: {
     modules: [
       'src',
