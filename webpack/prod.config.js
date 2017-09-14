@@ -5,16 +5,16 @@ const webpack = require('webpack');
 const CleanPlugin = require('clean-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const projectRootPath = path.resolve(__dirname, '../');
-const assetsPath = path.resolve(projectRootPath, './static/dist');
+const assetsPath = path.resolve(__dirname, '../static/dist');
 const WebpackIsomorphicToolsPlugin = require('webpack-isomorphic-tools/plugin');
 const webpackIsomorphicToolsPlugin = new WebpackIsomorphicToolsPlugin(require('./webpack-isomorphic-tools'));
 
 module.exports = {
   devtool: 'source-map',
-  context: path.resolve(__dirname, '../'),
+  context: path.resolve(__dirname, '..'),
   entry: {
     'main': [
-      'src/client.js',
+      './src/client.js',
     ]
   },
   output: {
@@ -45,12 +45,6 @@ module.exports = {
           use: ['css-loader?minimize=true&sourceMap', 'postcss-loader', 'less-loader']
         })
       }, {
-        test: /\.jpe?g$|\.gif$|\.png$/,
-        use: ['url-loader?limit=10000&name=images/[name].[ext]']
-      }, {
-        test: /\.ico|\.svg$|\.woff$|\.ttf$|\.eot$/,
-        use: ['url-loader?limit=10000&name=fonts/[name].[ext]']
-      }, {
         test: /\.json$/,
         exclude: /node_modules/,
         use: ['json-loader']
@@ -62,7 +56,7 @@ module.exports = {
         })
       }, {
         test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
-        use: "url?limit=10000&mimetype=image/svg+xml"
+        use: "url-loader?limit=10000"
       }, {
         test: webpackIsomorphicToolsPlugin.regular_expression('images'),
         use: 'url-loader?limit=10240'
@@ -97,7 +91,6 @@ module.exports = {
       },
       sourceMap: true
     }),
-
     webpackIsomorphicToolsPlugin
   ]
 };

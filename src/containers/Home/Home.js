@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Helmet from 'react-helmet';
 import logo from './logo.png';
+import img2g from './2G.png';
 
 export default class Home extends Component {
   render() {
@@ -10,6 +11,7 @@ export default class Home extends Component {
         <Helmet title="Home" />
         fuck
         <img src={logo} />
+        <img src={img2g} />
       </div>
     );
   }

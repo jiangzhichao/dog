@@ -55,9 +55,6 @@ module.exports = {
         test: /\.less$/,
         use: ['style-loader', 'css-loader', 'postcss-loader', 'less-loader']
       }, {
-        test: /\.ico|\.svg$|\.woff$|\.ttf$|\.eot$/,
-        use: ['url-loader?limit=10000&name=[name].[ext]']
-      }, {
         test: /\.json$/,
         exclude: /node_modules/,
         use: ['json-loader']
@@ -69,7 +66,7 @@ module.exports = {
         use: 'html-loader'
       }, {
         test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
-        use: "url-loader?limit=10000&mimetype=image/svg+xml"
+        use: "url-loader?limit=10000"
       }, {
         test: webpackIsomorphicToolsPlugin.regular_expression('images'),
         use: 'url-loader?limit=10240'
