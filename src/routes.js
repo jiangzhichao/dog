@@ -22,9 +22,6 @@ export default (store) => {
     }
   };
 
-  /**
-   * Please keep routes in alphabetical order
-   */
   return (
     <Route path="/" component={App}>
       <IndexRoute component={Home} />

@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import './App.scss';
 
 export default class App extends Component {
   static propTypes = {
@@ -14,22 +15,16 @@ export default class App extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (!this.props.user && nextProps.user) {
-      // login
       this.props.pushState('/loginSuccess');
     } else if (this.props.user && !nextProps.user) {
-      // logout
       this.props.pushState('/');
     }
   }
 
   render() {
-    const styles = require('./App.scss');
-
     return (
-      <div className={styles.app}>
-        <div className={styles.appContent}>
-          {this.props.children}
-        </div>
+      <div className="app">
+        {this.props.children}
       </div>
     );
   }

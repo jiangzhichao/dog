@@ -25,5 +25,5 @@ app.use(require('webpack-dev-middleware')(compiler, serverOptions));
 app.use(require('webpack-hot-middleware')(compiler));
 
 app.listen(port, () => {
-  console.log('\n' + '-----lovely------> http://' + config.host + ':' + config.port + '\n');
+  console.log('\n' + '---------- dog --------> http://' + config.host + ':' + config.port + '\n');
 });
