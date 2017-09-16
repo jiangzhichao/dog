@@ -17,7 +17,9 @@ export default function login(req) {
             if (doc.validPassword(password)) {
               doc.password = null;
               req.session.user = doc;
-              resolve({ user: doc });
+              setTimeout(() => {
+                resolve({ user: doc });
+              }, 5000);
             } else {
               reject({ msg: '密码错误' });
             }

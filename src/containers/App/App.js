@@ -5,6 +5,7 @@ import { asyncConnect } from 'redux-async-connect';
 import Helmet from 'react-helmet';
 import { push } from 'react-router-redux';
 import './App.scss';
+import LoadingBar from 'react-redux-loading-bar';
 import { isLoaded as isAuthLoaded, load as loadAuth } from 'redux/modules/auth';
 
 @asyncConnect([{
@@ -42,6 +43,13 @@ export default class App extends Component {
     return (
       <div className="app">
         <Helmet title="dog" />
+        <LoadingBar
+          style={{
+            backgroundColor: '#108ee9',
+            opacity: 0.6,
+            zIndex: 999
+          }}
+        />
         {this.props.children}
       </div>
     );
