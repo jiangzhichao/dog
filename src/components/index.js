@@ -6,3 +6,4 @@
  */
 
 export Fuck from './Fuck/Fuck';
+export ThreeBg from './ThreeBg/ThreeBg';

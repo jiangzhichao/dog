@@ -1,15 +1,21 @@
-const LOAD = 'redux-example/auth/LOAD';
-const LOAD_SUCCESS = 'redux-example/auth/LOAD_SUCCESS';
-const LOAD_FAIL = 'redux-example/auth/LOAD_FAIL';
-const LOGIN = 'redux-example/auth/LOGIN';
-const LOGIN_SUCCESS = 'redux-example/auth/LOGIN_SUCCESS';
-const LOGIN_FAIL = 'redux-example/auth/LOGIN_FAIL';
-const LOGOUT = 'redux-example/auth/LOGOUT';
-const LOGOUT_SUCCESS = 'redux-example/auth/LOGOUT_SUCCESS';
-const LOGOUT_FAIL = 'redux-example/auth/LOGOUT_FAIL';
+import { message } from 'antd';
+
+const LOAD = 'auth/LOAD';
+const LOAD_SUCCESS = 'auth/LOAD_SUCCESS';
+const LOAD_FAIL = 'auth/LOAD_FAIL';
+const LOGIN = 'auth/LOGIN';
+const LOGIN_SUCCESS = 'auth/LOGIN_SUCCESS';
+const LOGIN_FAIL = 'auth/LOGIN_FAIL';
+const LOGOUT = 'auth/LOGOUT';
+const LOGOUT_SUCCESS = 'auth/LOGOUT_SUCCESS';
+const LOGOUT_FAIL = 'auth/LOGOUT_FAIL';
+const CHANGE = 'auth/CHANGE';
+const REGISTER = 'auth/REGISTER';
+const REGISTER_SUCCESS = 'auth/REGISTER_SUCCESS';
 
 const initialState = {
-  loaded: false
+  loaded: false,
+  current: 'login'
 };
 
 export default function reducer(state = initialState, action = {}) {
@@ -24,7 +30,7 @@ export default function reducer(state = initialState, action = {}) {
         ...state,
         loading: false,
         loaded: true,
-        user: action.result
+        user: action.result.user
       };
     case LOAD_FAIL:
       return {
@@ -42,7 +48,7 @@ export default function reducer(state = initialState, action = {}) {
       return {
         ...state,
         loggingIn: false,
-        user: action.result
+        user: action.result.user
       };
     case LOGIN_FAIL:
       return {
@@ -68,36 +74,73 @@ export default function reducer(state = initialState, action = {}) {
         loggingOut: false,
         logoutError: action.error
       };
+    case CHANGE:
+      return {
+        ...state,
+        ...action.arg
+      };
+    case REGISTER: {
+      return {
+        ...state,
+        user: null
+      };
+    }
+    case REGISTER_SUCCESS:
+      return {
+        ...state,
+        user: action.result.user
+      };
     default:
       return state;
   }
 }
 
-export function isLoaded(globalState) {
-  return globalState.auth && globalState.auth.loaded;
-}
+export const change = arg => ({ type: CHANGE, arg });
 
-export function load() {
-  return {
-    types: [LOAD, LOAD_SUCCESS, LOAD_FAIL],
-    promise: (client) => client.get('/loadAuth')
-  };
-}
+export const isLoaded = globalState => globalState.auth && globalState.auth.loaded;
 
-export function login(name) {
-  return {
+export const load = () => ({
+  types: [LOAD, LOAD_SUCCESS, LOAD_FAIL],
+  promise: (client) => client.get('admin/loadAuth')
+});
+
+export const login = () => (dispatch, getState) => {
+  const { auth: { name, password } } = getState();
+
+  if (!name || !password) {
+    message.destroy();
+    message.warning('请输入用户名，密码');
+    return;
+  }
+
+  return dispatch({
     types: [LOGIN, LOGIN_SUCCESS, LOGIN_FAIL],
-    promise: (client) => client.post('/login', {
-      data: {
-        name: name
-      }
-    })
-  };
-}
+    promise: (client) => client.post('admin/login', { data: { name, password } })
+  });
+};
 
-export function logout() {
-  return {
-    types: [LOGOUT, LOGOUT_SUCCESS, LOGOUT_FAIL],
-    promise: (client) => client.get('/logout')
-  };
-}
+export const register = () => (dispatch, getState) => {
+  const { auth: { name, password, againPassword } } = getState();
+
+  if (!name || !password || !againPassword) {
+    message.destroy();
+    message.warning('请输入用户名，密码');
+    return;
+  }
+
+  if (password !== againPassword) {
+    message.destroy();
+    message.warning('两次输入密码不一致');
+    return;
+  }
+
+  return dispatch({
+    types: [REGISTER, REGISTER_SUCCESS, ''],
+    promise: (client) => client.post('admin/register', { data: { name, password } })
+  });
+};
+
+export const logout = () => ({
+  types: [LOGOUT, LOGOUT_SUCCESS, LOGOUT_FAIL],
+  promise: (client) => client.get('admin/logout')
+});

@@ -65,6 +65,9 @@ module.exports = {
         test: /\.html$/,
         use: 'html-loader'
       }, {
+        test: /\.ico|\.svg$|\.woff$|\.ttf$|\.eot$/,
+        use: ['url-loader?limit=10000&name=fonts/[name].[ext]']
+      }, {
         test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
         use: "url-loader?limit=10000"
       }, {

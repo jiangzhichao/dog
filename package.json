@@ -23,7 +23,7 @@
   ],
   "main": "bin/server.js",
   "scripts": {
-    "start": "concurrently --kill-others \"npm run start-prod\" \"npm run start-prod-api\"",
+    "start": "concurrently --kill-others \"npm run start-prod\" \"npm run start-prod-api\" \"npm run start-mongod\"",
     "start-prod": "better-npm-run start-prod",
     "start-prod-api": "better-npm-run start-prod-api",
     "build": "better-npm-run build",
@@ -32,7 +32,8 @@
     "start-dev": "better-npm-run start-dev",
     "start-dev-api": "better-npm-run start-dev-api",
     "watch-client": "better-npm-run watch-client",
-    "dev": "concurrently --kill-others \"npm run watch-client\" \"npm run start-dev\" \"npm run start-dev-api\"",
+    "dev": "concurrently --kill-others \"npm run watch-client\" \"npm run start-dev\" \"npm run start-dev-api\" \"npm run start-mongod\"",
+    "start-mongod": "better-npm-run start-mongod",
     "test": "karma start",
     "test-node": "./node_modules/mocha/bin/mocha $(find api -name '*-test.js') --compilers js:babel-core/register",
     "test-node-watch": "./node_modules/mocha/bin/mocha $(find api -name '*-test.js') --compilers js:babel-core/register --watch"
@@ -86,12 +87,17 @@
       "env": {
         "NODE_ENV": "production"
       }
+    },
+    "start-mongod": {
+      "command": "mongod"
     }
   },
   "dependencies": {
+    "antd": "^2.13.1",
     "babel-core": "^6.5.2",
     "babel-loader": "^7.1.2",
     "babel-plugin-add-module-exports": "^0.2.1",
+    "babel-plugin-import": "^1.4.0",
     "babel-plugin-transform-decorators-legacy": "^1.3.4",
     "babel-plugin-transform-react-display-name": "^6.3.13",
     "babel-plugin-transform-runtime": "^6.3.13",
@@ -101,8 +107,10 @@
     "babel-preset-stage-0": "^6.3.13",
     "babel-register": "^6.3.13",
     "babel-runtime": "^6.3.19",
+    "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.18.1",
     "compression": "^1.6.0",
+    "connect-mongo": "^1.3.2",
     "express": "^4.13.3",
     "express-session": "^1.12.1",
     "file-loader": "^0.11.2",
@@ -110,10 +118,12 @@
     "http-proxy": "^1.12.0",
     "immutable": "^3.8.1",
     "invariant": "^2.2.0",
+    "jquery-file-upload-middleware": "^0.1.8",
     "less": "^2.5.3",
     "less-loader": "^4.0.5",
     "lru-memoize": "^1.0.0",
     "map-props": "^1.0.0",
+    "mongoose": "^4.11.11",
     "multireducer": "^3.1.0",
     "piping": "^0.3.0",
     "postcss-loader": "^2.0.6",
@@ -132,12 +142,12 @@
     "redux-async-connect": "^1.0.0-rc2",
     "redux-form": "^3.0.12",
     "redux-thunk": "^2.1.0",
-    "scroll-behavior": "^0.9.3",
     "serialize-javascript": "^1.1.2",
     "serve-favicon": "^2.3.0",
     "socket.io": "^2.0.3",
     "socket.io-client": "^2.0.3",
     "superagent": "^3.6.0",
+    "three": "^0.87.1",
     "url-loader": "^0.5.9",
     "violet-paginator": "^2.0.6",
     "warning": "^3.0.0",

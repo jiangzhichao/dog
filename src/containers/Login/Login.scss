@@ -1,0 +1,17 @@
+.login-center-content {
+  width: 500px;
+  height: 300px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: auto;
+  z-index: 100;
+  transition: all 1s;
+  padding: 10px;
+}
+
+.login-input {
+  margin-bottom: 40px;
+}

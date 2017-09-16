@@ -1,6 +1,4 @@
-export loadInfo from './loadInfo';
-export loadAuth from './loadAuth';
-export login from './login';
-export logout from './logout';
-export * as widget from './widget/index';
-export * as survey from './survey/index';
+export * as admin from './admin/index';
+export * as message from './message/index';
+export * as file from './file/index';
+export * as group from './group/index';

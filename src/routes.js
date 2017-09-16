@@ -4,7 +4,7 @@ import { isLoaded as isAuthLoaded, load as loadAuth } from 'redux/modules/auth';
 import {
   NotFound,
   App,
-  Home,
+  Login,
 } from 'containers';
 
 export default (store) => {
@@ -24,7 +24,7 @@ export default (store) => {
 
   return (
     <Route path="/" component={App}>
-      <IndexRoute component={Home} />
+      <IndexRoute component={Login} />
 
       <Route onEnter={requireLogin} />
 

@@ -1,3 +1,5 @@
+import { message } from 'antd';
+
 export default function clientMiddleware(client) {
   return ({ dispatch, getState }) => {
     return next => action => {
@@ -16,7 +18,11 @@ export default function clientMiddleware(client) {
       const actionPromise = promise(client);
       actionPromise.then(
         (result) => next({ ...rest, result, type: SUCCESS }),
-        (error) => next({ ...rest, error, type: FAILURE })
+        (error) => {
+          message.destroy();
+          message.error(error.msg);
+          return next({ ...rest, error, type: FAILURE });
+        }
       ).catch((error) => {
         console.error('MIDDLEWARE ERROR:', error);
         next({ ...rest, error, type: FAILURE });
