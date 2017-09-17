@@ -1,0 +1,22 @@
+.friends-left {
+  float: left;
+  width: 120px;
+}
+
+.friends-line {
+  padding: 5px;
+  cursor: pointer;
+  transition: all 1s;
+}
+
+.friends-checked {
+  background-color: #ecf6fd;
+}
+
+.friends-line:hover {
+  background-color: #ecf6fd;
+}
+
+.friends-line .ant-avatar {
+  vertical-align: middle;
+}

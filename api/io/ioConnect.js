@@ -13,24 +13,31 @@ export default function ioConnect(io, runnable) {
     onlineSum++;
     console.log('在线人数:', onlineSum);
 
-    socket.on('name', (data) => {
-      const { _id, name } = data;
-      socket.name = name;
-      socket._id = _id;
+    socket.on('login', data => {
+      socket.user = data;
 
-      const sockets = io.sockets.sockets;
-      const onlineObj = {};
-      Object.keys(sockets).forEach((item) => {
-        onlineObj[sockets[item]._id] = {
-          id: item,
-          name: sockets[item]['name']
-        };
-      });
-      io.sockets.emit('onlineObj', onlineObj);
-
-      socket.broadcast.emit('new', { type: 'success', text: name + '上线' });
-      io.sockets.emit('info', { type: 'success', text: onlineSum + '人在线' });
+      socket.broadcast.emit('info', { type: 'success', text: data.name + '上线' });
+      io.sockets.emit('onlineInfo', { type: 'success', text: onlineSum + '人在线' });
     });
+
+    // socket.on('name', (data) => {
+    //   const { _id, name } = data;
+    //   socket.name = name;
+    //   socket._id = _id;
+    //
+    //   const sockets = io.sockets.sockets;
+    //   const onlineObj = {};
+    //   Object.keys(sockets).forEach((item) => {
+    //     onlineObj[sockets[item]._id] = {
+    //       id: item,
+    //       name: sockets[item]['name']
+    //     };
+    //   });
+    //   io.sockets.emit('onlineObj', onlineObj);
+    //
+    //   socket.broadcast.emit('new', { type: 'success', text: name + '上线' });
+    //   io.sockets.emit('info', { type: 'success', text: onlineSum + '人在线' });
+    // });
 
     socket.on('disconnect', () => {
       onlineSum--;
@@ -68,5 +75,6 @@ export default function ioConnect(io, runnable) {
     });
 
   });
+
   io.listen(runnable);
 }

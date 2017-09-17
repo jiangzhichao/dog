@@ -33,7 +33,7 @@ export default class App extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (!this.props.user && nextProps.user) {
-      this.props.pushState('/loginSuccess');
+      this.props.pushState('/home');
     } else if (this.props.user && !nextProps.user) {
       this.props.pushState('/');
     }

@@ -1,0 +1,71 @@
+.friends {
+  height: 100%;
+}
+
+.friends-right {
+  margin-left: 120px;
+  border: 1px solid #e9e9e9;
+  height: 100%;
+  position: relative;
+}
+
+.friends-message {
+  height: calc(100% - 110px);
+  overflow: auto;
+  width: 100%;
+}
+
+.friends-tool {
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  width: 100%;
+  height: 110px;
+}
+
+.friends-img {
+  height: 28px;
+  line-height: 28px;
+  color: #666;
+  padding-left: 10px;
+  border-top: 1px solid #e9e9e9;
+}
+
+.friends-send {
+  border-top: 1px solid #e9e9e9;
+}
+
+.friends-send textarea {
+  width: 100%;
+  height: 79px;
+  border: none;
+  margin: 0px;
+  padding: 6px;
+  outline: none;
+}
+
+.message-line {
+  overflow: hidden;
+}
+
+.message-left {
+  max-width: 90%;
+  color: #666;
+  padding: 4px;
+  float: left;
+  margin-bottom: 4px;
+  margin-left: 4px;
+  border-radius: 6px;
+  border: 1px solid #e9e9e9;
+}
+
+.message-right {
+  max-width: 90%;
+  color: #666;
+  padding: 4px;
+  float: right;
+  margin-bottom: 4px;
+  margin-right: 4px;
+  border-radius: 6px;
+  border: 1px solid #e9e9e9;
+}

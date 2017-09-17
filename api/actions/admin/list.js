@@ -21,7 +21,7 @@ export default function all(req) {
           reject({ msg: '查询错误!', error });
         } else {
           if (doc) {
-            resolve({ friendsList: doc });
+            resolve({ friends: doc.friends });
           } else {
             reject({ msg: '无结果' });
           }

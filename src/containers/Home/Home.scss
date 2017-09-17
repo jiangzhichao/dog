@@ -1,0 +1,24 @@
+.home-top {
+  height: 40px;
+  border-bottom: 1px solid #e9e9e9;
+}
+
+.home-left {
+  width: 180px;
+  float: left;
+  height: calc(100% - 40px);
+}
+
+.home-right {
+  margin-left: 180px;
+  padding: 12px;
+  height: calc(100% - 40px);
+}
+
+.j-home {
+  height: 100%;
+}
+
+.j-home .ant-menu-inline {
+  height: 100%;
+}

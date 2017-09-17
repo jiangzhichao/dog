@@ -5,6 +5,7 @@ import {
   NotFound,
   App,
   Login,
+  Home
 } from 'containers';
 
 export default (store) => {
@@ -26,7 +27,9 @@ export default (store) => {
     <Route path="/" component={App}>
       <IndexRoute component={Login} />
 
-      <Route onEnter={requireLogin} />
+      <Route onEnter={requireLogin}>
+        <Route path="/home" component={Home} />
+      </Route>
 
       <Route path="*" component={NotFound} status={404} />
     </Route>
