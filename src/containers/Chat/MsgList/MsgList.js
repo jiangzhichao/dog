@@ -30,8 +30,8 @@ export default class MsgList extends Component {
     this.gotoBottom();
   }
 
-  componentDidUpdate() {
-    this.gotoBottom();
+  componentDidUpdate(preProps) {
+    if (preProps.selectedFriend !== this.props.selectedFriend || preProps.allMsg !== this.props.allMsg) this.gotoBottom();
   }
 
   gotoBottom = () => {

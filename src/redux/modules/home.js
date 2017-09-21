@@ -1,6 +1,9 @@
 /**
  * Created by jiang on 2017/9/16.
  */
+import { message } from 'antd';
+import { change as changeMsg } from './message';
+
 const CHANGE = 'home/CHANGE';
 const LOAD_FRIENDS = 'home/LOAD_FRIENDS';
 const CURRENT_MSG = 'home/CURRENT_MSG';
@@ -62,3 +65,37 @@ export const loadMsg = (to) => ({
   promise: (client) => client.get('/message/all', { params: { to } }),
   to
 });
+
+export const sendMsg = () => (dispatch, getState) => {
+  const {
+    message: { writeMsg },
+    auth: { user },
+    friendsList: { selectedFriend, onlineUsers },
+    home: { allMsg }
+  } = getState();
+  if (!window.socket.id) {
+    message.warning('与服务器断开连接');
+    return;
+  }
+
+  const msgObj = {
+    come: user._id,
+    to: selectedFriend._id,
+    content: writeMsg
+  };
+  window.socket.emit('message', {
+    id: onlineUsers[selectedFriend._id].socketId,
+    message: msgObj
+  });
+
+  allMsg[selectedFriend._id].push(msgObj);
+  dispatch(change({ allMsg: { ...allMsg } }));
+
+  dispatch(changeMsg({ writeMsg: '' }));
+};
+
+export const receiveMsg = (msg) => (dispatch, getState) => {
+  const { allMsg } = getState().home;
+  allMsg[msg.come].push(msg);
+  dispatch(change({ allMsg: { ...allMsg } }));
+};

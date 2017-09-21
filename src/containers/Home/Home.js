@@ -11,7 +11,7 @@ const SubMenu = Menu.SubMenu;
 import './Home.scss';
 
 import { logout } from 'redux/modules/auth';
-import { change, loadFriends, loadMsg } from 'redux/modules/home';
+import { change, loadFriends, loadMsg, receiveMsg } from 'redux/modules/home';
 import { change as changeList } from 'redux/modules/friendsList';
 
 @asyncConnect([{
@@ -35,14 +35,15 @@ import { change as changeList } from 'redux/modules/friendsList';
 @connect(state => ({
   user: state.auth.user,
   home: state.home,
-}), { logout, change, changeList })
+}), { logout, change, changeList, receiveMsg })
 export default class Home extends Component {
   static propTypes = {
     user: PropTypes.object,
     home: PropTypes.object,
     logout: PropTypes.func,
     change: PropTypes.func,
-    changeList: PropTypes.func
+    changeList: PropTypes.func,
+    receiveMsg: PropTypes.func
   };
 
   componentDidMount() {
@@ -55,7 +56,8 @@ export default class Home extends Component {
         this.props.changeList({ onlineUsers });
       });
 
-      socket.on('message', () => {
+      socket.on('message', (msg) => {
+        this.props.receiveMsg(msg);
       });
     });
   }
