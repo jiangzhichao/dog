@@ -4,10 +4,8 @@
 const CHANGE = 'message/CHANGE';
 
 const initialState = {
-  previewVisible: false,
-  previewImageUrl: '',
-  writeMsg: '',
-  serverReceiveMsg: null,
+  selectedFriend: {},
+  onlineUsers: {},
 };
 
 export default function reducer(state = initialState, action = {}) {

@@ -13,7 +13,7 @@ export default function all(req) {
       .sort({ 'create_time': 1 })
       .exec((error, doc) => {
         if (error) {
-          reject({ msg: '查询错误!', error });
+          reject({ msg: '查询错误!: ' + error });
         } else {
           if (doc) {
             resolve({ messageList: doc });

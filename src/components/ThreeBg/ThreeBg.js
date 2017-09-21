@@ -34,7 +34,7 @@ export default class ThreeBg extends Component {
     this._animate();
   }
 
-  componentWillUnMount() {
+  componentWillUnmount() {
     cancelAnimationFrame(this.time);
     Cache.clear();
   }

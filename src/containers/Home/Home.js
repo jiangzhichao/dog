@@ -2,9 +2,6 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { asyncConnect } from 'redux-async-connect';
-import { logout } from 'redux/modules/auth';
-import { change } from 'redux/modules/home';
-import { loadFriends, loadMsg } from 'redux/modules/message';
 import Helmet from 'react-helmet';
 import { Menu, Icon, Avatar, Button, Spin } from 'antd';
 import io from 'socket.io-client';
@@ -13,13 +10,20 @@ import { Chat } from 'containers';
 const SubMenu = Menu.SubMenu;
 import './Home.scss';
 
+import { logout } from 'redux/modules/auth';
+import { change, loadFriends, loadMsg } from 'redux/modules/home';
+import { change as changeList } from 'redux/modules/friendsList';
+
 @asyncConnect([{
   promise: ({ store: { dispatch, getState } }) => {
-    if (!getState().message.loadFriends) {
+    if (!getState().home.loadFriends) {
       return new Promise((resolve) => {
         dispatch(loadFriends()).then((s) => {
           if (s.friends.length > 0) {
-            dispatch(loadMsg(s.friends[0]._id)).then(resolve);
+            dispatch(loadMsg(s.friends[0]._id)).then(() => {
+              dispatch(changeList({ selectedFriend: s.friends[0] }));
+              resolve();
+            });
           } else {
             resolve();
           }
@@ -28,13 +32,17 @@ import './Home.scss';
     }
   }
 }])
-@connect(state => ({ user: state.auth.user, home: state.home }), { logout, change })
+@connect(state => ({
+  user: state.auth.user,
+  home: state.home,
+}), { logout, change, changeList })
 export default class Home extends Component {
   static propTypes = {
     user: PropTypes.object,
     home: PropTypes.object,
     logout: PropTypes.func,
-    change: PropTypes.func
+    change: PropTypes.func,
+    changeList: PropTypes.func
   };
 
   componentDidMount() {
@@ -42,7 +50,19 @@ export default class Home extends Component {
     socket.on('connect', () => {
       this.props.change({ socketInit: true });
       socket.emit('login', this.props.user);
+
+      socket.on('onlineUsers', (onlineUsers) => {
+        this.props.changeList({ onlineUsers });
+      });
+
+      socket.on('message', () => {
+      });
     });
+  }
+
+  componentWillUnmount() {
+    if (window.socket && window.socket.destroy) window.socket.destroy();
+    this.props.change({ socketInit: false });
   }
 
   renderTop = () => {

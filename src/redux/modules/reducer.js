@@ -6,6 +6,7 @@ import { loadingBarReducer } from 'react-redux-loading-bar';
 import auth from './auth';
 import home from './home';
 import message from './message';
+import friendsList from './friendsList';
 
 export default combineReducers({
   routing: routerReducer,
@@ -13,5 +14,6 @@ export default combineReducers({
   reduxAsyncConnect,
   auth,
   home,
-  message
+  message,
+  friendsList
 });

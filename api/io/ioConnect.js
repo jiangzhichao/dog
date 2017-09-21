@@ -5,56 +5,28 @@ import saveOnLineMsg from './saveOnLineMsg';
 
 export default function ioConnect(io, runnable) {
 
-  let onlineSum = 0;
+  const onlineUsers = {};
   io.path('/ws');
 
   io.on('connection', (socket) => {
 
-    onlineSum++;
-    console.log('在线人数:', onlineSum);
-
     socket.on('login', data => {
       socket.user = data;
 
+      onlineUsers[data._id] = data;
+      onlineUsers[data._id].socketId = socket.id;
+      console.log(`在线人数: ${Object.keys(onlineUsers).length}`);
+
       socket.broadcast.emit('info', { type: 'success', text: data.name + '上线' });
-      io.sockets.emit('onlineInfo', { type: 'success', text: onlineSum + '人在线' });
+      io.sockets.emit('onlineUsers', onlineUsers);
     });
 
-    // socket.on('name', (data) => {
-    //   const { _id, name } = data;
-    //   socket.name = name;
-    //   socket._id = _id;
-    //
-    //   const sockets = io.sockets.sockets;
-    //   const onlineObj = {};
-    //   Object.keys(sockets).forEach((item) => {
-    //     onlineObj[sockets[item]._id] = {
-    //       id: item,
-    //       name: sockets[item]['name']
-    //     };
-    //   });
-    //   io.sockets.emit('onlineObj', onlineObj);
-    //
-    //   socket.broadcast.emit('new', { type: 'success', text: name + '上线' });
-    //   io.sockets.emit('info', { type: 'success', text: onlineSum + '人在线' });
-    // });
-
     socket.on('disconnect', () => {
-      onlineSum--;
+      delete onlineUsers[socket.user._id];
+      console.log(`在线人数: ${Object.keys(onlineUsers).length}`);
 
-      const sockets = io.sockets.sockets;
-      const onlineObj = {};
-      Object.keys(sockets).forEach((item) => {
-        onlineObj[sockets[item]._id] = {
-          id: item,
-          name: sockets[item]['name']
-        };
-      });
-      io.sockets.emit('onlineObj', onlineObj);
-      io.sockets.emit('info', { type: 'success', text: onlineSum + '人在线' });
-      socket.broadcast.emit('off', { type: 'warning', text: socket.name + '下线' });
-
-      console.log('在线人数:', onlineSum);
+      io.sockets.emit('onlineUsers', onlineUsers);
+      socket.broadcast.emit('info', { type: 'warning', text: socket.user.name + '下线' });
     });
 
     socket.on('message', (data) => {
@@ -62,18 +34,10 @@ export default function ioConnect(io, runnable) {
       const toSocket = io.sockets.sockets[id];
 
       message.is_offline = !toSocket;
-
       saveOnLineMsg(message).then((doc) => {
-        toSocket.emit('message', doc);
+        if (toSocket) toSocket.emit('message', doc);
       });
     });
-
-    socket.on('create', (data) => {
-      const { id } = data;
-      const toSocket = io.sockets.sockets[id];
-      toSocket.emit('create', {});
-    });
-
   });
 
   io.listen(runnable);

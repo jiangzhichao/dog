@@ -56,7 +56,7 @@ if (__DEVTOOLS__ && !window.devToolsExtension) {
       store={store}
       key="provider"
     >
-      <div>
+      <div style={{ height: '100%' }}>
         {component}
         <DevTools />
       </div>
