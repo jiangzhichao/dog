@@ -32,91 +32,85 @@ app.use(Express.static(path.join(__dirname, '..', 'static')));
 app.use(Express.static(path.join(__dirname, '..', 'uploads')));
 
 app.use('/api', (req, res) => {
-  proxy.web(req, res, { target: targetUrl });
+    proxy.web(req, res, { target: targetUrl });
 });
 
 app.use('/ws', (req, res) => {
-  proxy.web(req, res, { target: targetUrl + '/ws' });
+    proxy.web(req, res, { target: targetUrl + '/ws' });
 });
 
 server.on('upgrade', (req, socket, head) => {
-  proxy.ws(req, socket, head);
+    proxy.ws(req, socket, head);
 });
 
 proxy.on('error', (error, req, res) => {
-  let json;
-  if (error.code !== 'ECONNRESET') {
-    console.error('proxy error', error);
-  }
-  if (!res.headersSent) {
-    res.writeHead(500, { 'content-type': 'application/json' });
-  }
+    if (error.code !== 'ECONNRESET') console.error('proxy error', error);
+    if (!res.headersSent) res.writeHead(500, { 'content-type': 'application/json' });
 
-  json = { error: 'proxy_error', reason: error.message };
-  res.end(JSON.stringify(json));
+    res.end(JSON.stringify({ error: 'proxy_error', reason: error.message }));
 });
 
 app.use((req, res) => {
-  if (__DEVELOPMENT__) webpackIsomorphicTools.refresh();
+    if (__DEVELOPMENT__) webpackIsomorphicTools.refresh();
 
-  const client = new ApiClient(req);
-  const memoryHistory = createHistory(req.originalUrl);
-  const store = createStore(memoryHistory, client);
-  const history = syncHistoryWithStore(memoryHistory, store);
+    const client = new ApiClient(req);
+    const memoryHistory = createHistory(req.originalUrl);
+    const store = createStore(memoryHistory, client);
+    const history = syncHistoryWithStore(memoryHistory, store);
 
-  function hydrateOnClient() {
-    res.send('<!doctype html>\n' +
-      ReactDOM.renderToString(
-        <Html
-          assets={webpackIsomorphicTools.assets()}
-          store={store}
-        />
-      ));
-  }
-
-  if (__DISABLE_SSR__) {
-    hydrateOnClient();
-    return;
-  }
-
-  match({ history, routes: getRoutes(store), location: req.originalUrl }, (error, redirectLocation, renderProps) => {
-    if (redirectLocation) {
-      res.redirect(redirectLocation.pathname + redirectLocation.search);
-    } else if (error) {
-      console.error('ROUTER ERROR:', pretty.render(error));
-      res.status(500);
-      hydrateOnClient();
-    } else if (renderProps) {
-      loadOnServer({ ...renderProps, store, helpers: { client } }).then(() => {
-        const component = (
-          <Provider
-            store={store}
-            key="provider"
-          >
-            <ReduxAsyncConnect {...renderProps} />
-          </Provider>
-        );
-
-        res.status(200);
-
-        global.navigator = { userAgent: req.headers['user-agent'] };
-
-        res.send('<!doctype html>\n' +
-          ReactDOM.renderToString(
-            <Html
-              assets={webpackIsomorphicTools.assets()}
-              component={component}
-              store={store}
-            />
-          ));
-      });
-    } else {
-      res.status(404).send('Not found');
+    function hydrateOnClient() {
+        res.send('<!doctype html>' +
+            ReactDOM.renderToString(
+                <Html
+                    assets={webpackIsomorphicTools.assets()}
+                    store={store}
+                />
+            ));
     }
-  });
+
+    if (__DISABLE_SSR__) {
+        hydrateOnClient();
+        return;
+    }
+
+    match({ history, routes: getRoutes(store), location: req.originalUrl }, (error, redirectLocation, renderProps) => {
+        if (redirectLocation) {
+            res.redirect(redirectLocation.pathname + redirectLocation.search);
+        } else if (error) {
+            console.error('ROUTER ERROR:', pretty.render(error));
+            res.status(500);
+            hydrateOnClient();
+        } else if (renderProps) {
+            loadOnServer({ ...renderProps, store, helpers: { client } }).then(() => {
+                const component = (
+                    <Provider
+                        store={store}
+                        key="provider"
+                    >
+                        <ReduxAsyncConnect {...renderProps} />
+                    </Provider>
+                );
+
+                res.status(200);
+
+                global.navigator = { userAgent: req.headers['user-agent'] };
+
+                res.send('<!doctype html>\n' +
+                    ReactDOM.renderToString(
+                        <Html
+                            assets={webpackIsomorphicTools.assets()}
+                            component={component}
+                            store={store}
+                        />
+                    ));
+            });
+        } else {
+            res.status(404).send('Not found');
+        }
+    });
 });
 
 server.listen(config.port, (err) => {
-  console.info('----\n==> ✅  %s is running, talking to API server on %s.', config.app.title, config.apiPort);
-  console.info('==> 💻  Open http://%s:%s in a browser to view the app.', config.host, config.port);
+    console.info('----\n==> ✅  %s is running, talking to API server on %s.', config.app.title, config.apiPort);
+    console.info('==> 💻  Open http://%s:%s in a browser to view the app.', config.host, config.port);
 });

@@ -7,8 +7,8 @@ import MsgList from './MsgList/MsgList';
 import './Chat.scss';
 
 export default () => (
-  <div className="friends">
-    <FriendsList />
-    <MsgList />
-  </div>
+    <div className="friends">
+        <FriendsList />
+        <MsgList />
+    </div>
 );
