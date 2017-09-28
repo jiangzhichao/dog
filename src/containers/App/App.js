@@ -46,8 +46,8 @@ export default class App extends Component {
         <LoadingBar
           style={{
             backgroundColor: '#108ee9',
-            opacity: 0.6,
-            zIndex: 999
+            zIndex: 99999,
+            height: '2px'
           }}
         />
         {this.props.children}

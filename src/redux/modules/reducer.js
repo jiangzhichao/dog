@@ -6,7 +6,7 @@ import { loadingBarReducer } from 'react-redux-loading-bar';
 import auth from './auth';
 import home from './home';
 import message from './message';
-import friendsList from './friendsList';
+import admin from './admin';
 
 export default combineReducers({
   routing: routerReducer,
@@ -15,5 +15,5 @@ export default combineReducers({
   auth,
   home,
   message,
-  friendsList
+  admin
 });

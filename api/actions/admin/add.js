@@ -7,8 +7,12 @@ export default function one(req) {
     const { _id } = req.body;
     const selfId = req.session.user._id;
 
-    saveFriends(_id, selfId);
-    saveFriends(selfId, _id);
+    if (!_id) {
+      reject({ msg: '不能添加空好友' });
+    } else {
+      saveFriends(_id, selfId);
+      saveFriends(selfId, _id);
+    }
 
     function saveFriends(a, b) {
       Admin
@@ -22,7 +26,7 @@ export default function one(req) {
             friends.push(b);
             Admin.findOneAndUpdate({ _id: a }, { friends }, (err) => {
               if (err) {
-                reject({ msg: '更新错误' });
+                reject({ msg: '更新错误:' + err });
               } else {
                 resolve({ msg: '更新成功' });
               }

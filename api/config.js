@@ -13,9 +13,5 @@ module.exports = {
     saveUninitialized: false,
     cookie: { maxAge: 1000 * 60 * 60 * 24 }
   },
-  uploadFolder,
-  uploadConfig: {
-    uploadDir: uploadFolder,
-    uploadUrl: '/uploads',
-  }
+  uploadFolder
 };

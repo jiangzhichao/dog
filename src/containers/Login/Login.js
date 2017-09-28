@@ -16,6 +16,18 @@ export default class Login extends Component {
     register: PropTypes.func
   };
 
+  componentDidMount() {
+    document.addEventListener('keydown', this._keyDown);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('keydown', this._keyDown);
+  }
+
+  _keyDown = (e) => {
+    if (e.keyCode === 13) this.props.login();
+  };
+
   render() {
     const { auth } = this.props;
     return (

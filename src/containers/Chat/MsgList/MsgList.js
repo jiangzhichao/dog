@@ -11,8 +11,8 @@ import './MsgList.scss';
 
 @connect(state => ({
   user: state.auth.user,
-  selectedFriend: state.friendsList.selectedFriend,
-  allMsg: state.home.allMsg,
+  selectedFriend: state.message.selectedFriend,
+  allMsg: state.message.allMsg,
   previewVisible: state.message.previewVisible,
   previewImageUrl: state.message.previewImageUrl,
 }), { change })
@@ -39,6 +39,45 @@ export default class MsgList extends Component {
     if (ele.length > 0) ele[ele.length - 1].scrollIntoView();
   };
 
+  typeRenderMsg = (msg, i) => {
+    if (msg.fileInfo) {
+      return (
+        <Upload
+          onPreview={() => {
+            this.props.change({ previewVisible: true, previewImageUrl: msg.path });
+          }}
+          onRemove={false}
+          action=""
+          listType="picture-card"
+          fileList={[msg.fileInfo.file]}
+        />
+      );
+    }
+
+    if (msg.file && msg.file.type.indexOf('image') > -1) {
+      return (<Upload
+        onPreview={() => {
+          this.props.change({ previewVisible: true, previewImageUrl: msg.file.path });
+        }}
+        onRemove={false}
+        action=""
+        listType="picture-card"
+        fileList={[{
+          uid: i,
+          name: '',
+          status: 'done',
+          url: msg.file.path,
+        }]}
+      />);
+    }
+
+    if (msg.file) {
+      return (<a download={msg.file.name} href={msg.file.path}>{msg.content}</a>);
+    }
+
+    return msg.content;
+  };
+
   render() {
     const {
       allMsg,
@@ -57,25 +96,7 @@ export default class MsgList extends Component {
                 <div className="message-line" key={i}>
                   <div className={item.come === (user || {})._id
                     ? 'message-left' : 'message-right'}>
-                    {
-                      (item.file ? ( item.file.type.indexOf('image') > -1 ?
-                            <Upload
-                              onPreview={() => {
-                                this.props.change({ previewVisible: true, previewImageUrl: item.file.path });
-                              }}
-                              onRemove={false}
-                              action=""
-                              listType="picture-card"
-                              fileList={[{
-                                uid: i,
-                                name: 'xxx',
-                                status: 'done',
-                                url: item.file.path,
-                              }]}
-                            /> :
-                            <a download={item.file.name} href={item.file.path}>{item.content}</a>
-                        ) : item.content)
-                    }
+                    {this.typeRenderMsg(item, i)}
                   </div>
                 </div>
               );
@@ -90,7 +111,6 @@ export default class MsgList extends Component {
             this.props.change({ previewVisible: false });
           }}>
           <img
-            alt="example"
             style={{ width: '100%' }}
             src={previewImageUrl}
           />

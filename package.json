@@ -36,7 +36,8 @@
     "start-mongod": "better-npm-run start-mongod",
     "test": "karma start",
     "test-node": "./node_modules/mocha/bin/mocha $(find api -name '*-test.js') --compilers js:babel-core/register",
-    "test-node-watch": "./node_modules/mocha/bin/mocha $(find api -name '*-test.js') --compilers js:babel-core/register --watch"
+    "test-node-watch": "./node_modules/mocha/bin/mocha $(find api -name '*-test.js') --compilers js:babel-core/register --watch",
+    "pm2": "better-npm-run start-pm2"
   },
   "betterScripts": {
     "start-prod": {
@@ -90,14 +91,20 @@
     },
     "start-mongod": {
       "command": "mongod"
+    },
+    "start-pm2": {
+      "command": "pm2 start ./process.json",
+      "env": {
+        "NODE_ENV": ""
+      }
     }
   },
   "dependencies": {
-    "antd": "^2.13.1",
+    "antd": "^2.13.3",
     "babel-core": "^6.5.2",
     "babel-loader": "^7.1.2",
     "babel-plugin-add-module-exports": "^0.2.1",
-    "babel-plugin-import": "^1.4.0",
+    "babel-plugin-import": "^1.5.0",
     "babel-plugin-transform-decorators-legacy": "^1.3.4",
     "babel-plugin-transform-react-display-name": "^6.3.13",
     "babel-plugin-transform-runtime": "^6.3.13",
@@ -108,11 +115,11 @@
     "babel-register": "^6.3.13",
     "babel-runtime": "^6.3.19",
     "bcrypt-nodejs": "0.0.3",
-    "body-parser": "^1.18.1",
-    "compression": "^1.6.0",
+    "body-parser": "^1.18.2",
+    "compression": "^1.7.1",
     "connect-mongo": "^1.3.2",
-    "express": "^4.13.3",
-    "express-session": "^1.12.1",
+    "express": "^4.15.5",
+    "express-session": "^1.15.6",
     "file-loader": "^0.11.2",
     "hoist-non-react-statics": "^2.3.1",
     "http-proxy": "^1.12.0",
@@ -121,30 +128,29 @@
     "jquery-file-upload-middleware": "^0.1.8",
     "less": "^2.5.3",
     "less-loader": "^4.0.5",
+    "log4js": "^2.3.4",
     "lru-memoize": "^1.0.0",
     "map-props": "^1.0.0",
-    "mongoose": "^4.11.11",
+    "mongoose": "^4.11.13",
     "multireducer": "^3.1.0",
     "piping": "^0.3.0",
     "postcss-loader": "^2.0.6",
     "pretty-error": "^2.1.1",
-    "prop-types": "^15.5.10",
-    "react": "^15.6.1",
-    "react-bootstrap": "^0.28.1",
-    "react-dom": "^15.6.1",
+    "prop-types": "^15.6.0",
+    "react": "^15.6.2",
+    "react-dom": "^15.6.2",
     "react-helmet": "^5.2.0",
     "react-inline-css": "^2.0.0",
     "react-redux": "^5.0.6",
     "react-redux-loading-bar": "^2.9.2",
-    "react-router": "^2.8.1",
-    "react-router-bootstrap": "^0.20.1",
+    "react-router": "^3.2.0",
     "react-router-redux": "^4.0.0",
     "redux": "^3.0.4",
-    "redux-async-connect": "^1.0.0-rc2",
+    "redux-async-connect": "^1.0.0-rc4",
     "redux-form": "^3.0.12",
     "redux-thunk": "^2.1.0",
     "serialize-javascript": "^1.1.2",
-    "serve-favicon": "^2.3.0",
+    "serve-favicon": "^2.4.5",
     "socket.io": "^2.0.3",
     "socket.io-client": "^2.0.3",
     "superagent": "^3.6.0",
@@ -152,7 +158,7 @@
     "url-loader": "^0.5.9",
     "violet-paginator": "^2.0.6",
     "warning": "^3.0.0",
-    "webpack-isomorphic-tools": "^3.0.3"
+    "webpack-isomorphic-tools": "^3.0.5"
   },
   "devDependencies": {
     "autoprefixer-loader": "^3.1.0",
@@ -160,10 +166,8 @@
     "babel-plugin-react-transform": "^3.0.0",
     "babel-plugin-typecheck": "^3.6.0",
     "better-npm-run": "^0.1.0",
-    "bootstrap-sass": "^3.3.5",
-    "bootstrap-sass-loader": "^1.0.9",
     "chai": "^3.3.0",
-    "clean-webpack-plugin": "^0.1.6",
+    "clean-webpack-plugin": "^0.1.17",
     "concurrently": "^3.5.0",
     "css-loader": "^0.28.7",
     "eslint": "1.10.3",
@@ -199,7 +203,7 @@
     "strip-loader": "^0.1.0",
     "style-loader": "^0.18.2",
     "timekeeper": "0.0.5",
-    "webpack": "^3.5.6",
+    "webpack": "^3.6.0",
     "webpack-dev-middleware": "^1.4.0",
     "webpack-hot-middleware": "^2.5.0"
   },

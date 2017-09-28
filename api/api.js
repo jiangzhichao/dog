@@ -12,24 +12,25 @@ import upload from 'jquery-file-upload-middleware';
 import path from 'path';
 import ioConnect from './io/ioConnect';
 import resClear from './utils/resClear';
+// import log from './utils/log';
 
 const app = express();
 const server = new http.Server(app);
 const io = new SocketIo(server);
 const MongoStore = ConnectMongo(session);
-const { db, sessionDbConf, sessionDb, uploadConfig } = dbConfig;
+const { db, sessionDbConf, sessionDb } = dbConfig;
 
-// upload.configure(uploadConfig);
 mongoose.connect(db);
 
 app.use(session({ ...sessionDbConf, store: new MongoStore({ url: sessionDb }) }));
+app.use(bodyParser.json({ limit: '5mb' }));
 app.use('/uploads', (req, res, next) => {
   upload.fileHandler({
     uploadDir: () => path.join(__dirname, '../uploads', (req.session.user ? '/' + req.session.user._id : '')),
     uploadUrl: () => '/uploads'
   })(req, res, next);
 });
-app.use(bodyParser.json({ limit: '5mb' }));
+// app.use(log());
 app.use(resClear(actions));
 
 const runnable = app.listen(config.apiPort, (err) => {

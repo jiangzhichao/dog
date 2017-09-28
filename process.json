@@ -1,0 +1,33 @@
+{
+  "apps": [
+    {
+      "name": "mongod",
+      "script": "mongod",
+      "watch": true,
+      "log_date_format": "YYYY-MM-DD HH:mm Z"
+    },
+    {
+      "name": "server",
+      "script": "bin/server.js",
+      "watch": true,
+      "log_date_format": "YYYY-MM-DD HH:mm Z",
+      "env": {
+        "NODE_PATH": "./src",
+        "NODE_ENV": "production",
+        "PORT": 8080,
+        "APIPORT": 3030
+      }
+    },
+    {
+      "name": "api",
+      "script": "bin/api.js",
+      "watch": true,
+      "log_date_format": "YYYY-MM-DD HH:mm Z",
+      "env": {
+        "NODE_PATH": "./api",
+        "NODE_ENV": "production",
+        "APIPORT": 3030
+      }
+    }
+  ]
+}

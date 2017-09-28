@@ -4,16 +4,15 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { change } from 'redux/modules/friendsList';
-import { loadMsg } from 'redux/modules/home';
+import { loadMsg, change } from 'redux/modules/message';
 import { Avatar } from 'antd';
 import './FriendsList.scss';
 
 @connect(state => ({
   user: state.auth.user,
-  friends: state.home.friends,
-  onlineUsers: state.friendsList.onlineUsers,
-  selectedFriend: state.friendsList.selectedFriend,
+  friends: state.message.friends,
+  onlineUsers: state.message.onlineUsers,
+  selectedFriend: state.message.selectedFriend,
 }), { change, loadMsg })
 export default class FriendsList extends Component {
   static propTypes = {
@@ -36,7 +35,7 @@ export default class FriendsList extends Component {
               className={item._id === selectedFriend._id ? 'friends-line friends-checked' : 'friends-line'}
               onClick={() => {
                 this.props.change({ selectedFriend: item });
-                this.props.loadMsg(item._id);
+                this.props.loadMsg();
               }}
             >
               {

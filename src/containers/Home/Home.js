@@ -1,70 +1,50 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { asyncConnect } from 'redux-async-connect';
 import Helmet from 'react-helmet';
-import { Menu, Icon, Avatar, Button, Spin } from 'antd';
+import { Menu, Icon, Avatar, Button } from 'antd';
 import io from 'socket.io-client';
-import { Chat } from 'containers';
-// import { AddAdmin, ChatAdmin, AddGroup, JoinGroup } from 'containers';
+import { Chat, AddAdmin } from 'containers';
+// import { , ChatAdmin, AddGroup, JoinGroup } from 'containers';
 const SubMenu = Menu.SubMenu;
 import './Home.scss';
 
 import { logout } from 'redux/modules/auth';
-import { change, loadFriends, loadMsg, receiveMsg } from 'redux/modules/home';
-import { change as changeList } from 'redux/modules/friendsList';
+import { change } from 'redux/modules/home';
+import { change as changeMsg, receiveMsg, loadFriends, loadMsg, socketReady } from 'redux/modules/message';
 
-@asyncConnect([{
-  promise: ({ store: { dispatch, getState } }) => {
-    if (!getState().home.loadFriends) {
-      return new Promise((resolve) => {
-        dispatch(loadFriends()).then((s) => {
-          if (s.friends.length > 0) {
-            dispatch(loadMsg(s.friends[0]._id)).then(() => {
-              dispatch(changeList({ selectedFriend: s.friends[0] }));
-              resolve();
-            });
-          } else {
-            resolve();
-          }
-        });
-      });
-    }
-  }
-}])
 @connect(state => ({
+  socket: state.message.socket,
   user: state.auth.user,
   home: state.home,
-}), { logout, change, changeList, receiveMsg })
+}), { logout, change, changeMsg, receiveMsg, loadFriends, loadMsg, socketReady })
 export default class Home extends Component {
   static propTypes = {
     user: PropTypes.object,
     home: PropTypes.object,
     logout: PropTypes.func,
     change: PropTypes.func,
-    changeList: PropTypes.func,
-    receiveMsg: PropTypes.func
+    changeMsg: PropTypes.func,
+    receiveMsg: PropTypes.func,
+    loadFriends: PropTypes.func,
+    loadMsg: PropTypes.func,
+    socketReady: PropTypes.func,
+    socket: PropTypes.any
   };
 
   componentDidMount() {
-    const socket = window.socket = this.socket = io('', { path: '/ws' });
+    this.props.loadFriends().then(this.props.loadMsg);
+
+    const socket = io('', { path: '/ws' });
     socket.on('connect', () => {
-      this.props.change({ socketInit: true });
-      socket.emit('login', this.props.user);
-
-      socket.on('onlineUsers', (onlineUsers) => {
-        this.props.changeList({ onlineUsers });
-      });
-
-      socket.on('message', (msg) => {
-        this.props.receiveMsg(msg);
-      });
+      this.props.changeMsg({ socketInit: true, socket });
+      this.props.socketReady();
     });
   }
 
   componentWillUnmount() {
-    if (window.socket && window.socket.destroy) window.socket.destroy();
-    this.props.change({ socketInit: false });
+    if (this.props.socket && this.props.socket.destroy) this.props.socket.destroy();
+    this.props.changeMsg({ socketInit: false, socket: null });
   }
 
   renderTop = () => {
@@ -85,7 +65,10 @@ export default class Home extends Component {
           }}
         >{name}</Avatar>}
         <Button
-          onClick={this.props.logout}
+          onClick={() => {
+            this.props.logout();
+            window.location.href = '/';
+          }}
           style={{ float: 'right', marginRight: '18px', marginTop: '8px' }} shape="circle" icon="logout"
           size="small" />
       </div>
@@ -125,7 +108,7 @@ export default class Home extends Component {
   renderRight = () => {
     const keys = {
       1: <Chat />,
-      // 2: <AddAdmin />,
+      2: <AddAdmin />,
       // 5: <AddGroup />,
       // 6: <JoinGroup />
     };
@@ -139,18 +122,12 @@ export default class Home extends Component {
 
   render() {
     return (
-      this.props.home.socketInit ?
-        <div className="j-home">
-          <Helmet title="Home" />
-          { this.renderTop() }
-          { this.renderLeft() }
-          { this.renderRight() }
-        </div> :
-        <Spin
-          spinning
-          tip="连接socket。。。">
-          <div style={{ marginTop: '50%' }} />
-        </Spin>
+      <div className="j-home">
+        <Helmet title="Home" />
+        { this.renderTop() }
+        { this.renderLeft() }
+        { this.renderRight() }
+      </div>
     );
   }
 }
