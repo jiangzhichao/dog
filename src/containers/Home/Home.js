@@ -66,8 +66,8 @@ export default class Home extends Component {
                 >{name}</Avatar>}
                 <Button
                     onClick={() => {
-                        this.props.logout();
                         window.location.href = '/';
+                        this.props.logout();
                     }}
                     style={{ float: 'right', marginRight: '18px', marginTop: '8px' }} shape="circle" icon="logout"
                     size="small" />
