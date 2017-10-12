@@ -4,8 +4,7 @@ const Message = mongoose.model('Message');
 export default function all(req) {
 
   return new Promise((resolve, reject) => {
-    const { to } = req.query;
-    const come = req.session.user._id;
+    const { to, come } = req.query;
     Message
       .find()
       .where({ $or: [{ come, to }, { come: to, to: come }] })

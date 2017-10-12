@@ -4,8 +4,7 @@ const Admin = mongoose.model('Admin');
 export default function one(req) {
 
   return new Promise((resolve, reject) => {
-    const { _id } = req.body;
-    const selfId = req.session.user._id;
+    const { _id, selfId } = req.body;
 
     if (!_id) {
       reject({ msg: '不能添加空好友' });

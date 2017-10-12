@@ -5,6 +5,7 @@ import Helmet from 'react-helmet';
 import { Menu, Icon, Avatar, Button } from 'antd';
 import io from 'socket.io-client';
 import { Chat, AddAdmin } from 'containers';
+import Cookies from 'js-cookie';
 // import { , ChatAdmin, AddGroup, JoinGroup } from 'containers';
 const SubMenu = Menu.SubMenu;
 import './Home.scss';
@@ -36,9 +37,18 @@ export default class Home extends Component {
         this.props.loadFriends().then(this.props.loadMsg);
 
         const socket = io('', { path: '/ws' });
+
         socket.on('connect', () => {
-            this.props.changeMsg({ socketInit: true, socket });
-            this.props.socketReady();
+            socket
+                .emit('authenticate', { token: Cookies.get('token') })
+                .on('authenticated', () => {
+                    this.props.changeMsg({ socketInit: true, socket });
+                    this.props.socketReady();
+                })
+                .on('unauthorized', (msg) => {
+                    console.log(msg);
+                    this.props.changeMsg({ socketInit: false, socket: null });
+                });
         });
     }
 
@@ -66,8 +76,9 @@ export default class Home extends Component {
                 >{name}</Avatar>}
                 <Button
                     onClick={() => {
-                        window.location.href = '/';
-                        this.props.logout();
+                        this.props.logout().then(() => {
+                            window.location.reload();
+                        });
                     }}
                     style={{ float: 'right', marginRight: '18px', marginTop: '8px' }} shape="circle" icon="logout"
                     size="small" />

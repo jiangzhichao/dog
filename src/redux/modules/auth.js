@@ -1,4 +1,5 @@
 import { message } from 'antd';
+import Cookies from 'js-cookie';
 
 const LOAD = 'auth/LOAD';
 const LOAD_SUCCESS = 'auth/LOAD_SUCCESS';
@@ -46,6 +47,8 @@ export default function reducer(state = initialState, action = {}) {
                 user: null
             };
         case LOGIN_SUCCESS:
+            Cookies.set('token', action.result.token, { expires: 7 });
+
             return {
                 ...state,
                 loggingIn: false,
@@ -64,6 +67,8 @@ export default function reducer(state = initialState, action = {}) {
                 loggingOut: true
             };
         case LOGOUT_SUCCESS:
+            Cookies.remove('token');
+
             return {
                 ...state,
                 loggingOut: false,

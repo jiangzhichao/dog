@@ -64,7 +64,7 @@ export const loadFriends = () => (dispatch, getState) => {
     if (!isLoadFriends) {
         return dispatch({
             types: ['', LOAD_FRIENDS, ''],
-            promise: (client) => client.get('/admin/list')
+            promise: (client) => client.get('/admin/list', { params: { _id: getState().auth.user._id } })
         });
     }
 
@@ -73,13 +73,14 @@ export const loadFriends = () => (dispatch, getState) => {
 
 export const loadMsg = () => (dispatch, getState) => {
     const {
-        message: { selectedFriend, allMsg }
+        message: { selectedFriend, allMsg },
+        auth: { user }
     } = getState();
 
     if (!allMsg[selectedFriend._id]) {
         return dispatch({
             types: [CURRENT_MSG_LOADING, CURRENT_MSG, ''],
-            promise: (client) => client.get('/message/all', { params: { to: selectedFriend._id } }),
+            promise: (client) => client.get('/message/all', { params: { to: selectedFriend._id, come: user._id } }),
             to: selectedFriend._id
         });
     }

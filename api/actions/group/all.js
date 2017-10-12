@@ -4,7 +4,7 @@ const Group = mongoose.model('Group');
 export default function all(req) {
 
   return new Promise((resolve, reject) => {
-    const { groups = [] } = req.session.user;
+    const { groups = [] } = req.query;
 
     Group
       .find()

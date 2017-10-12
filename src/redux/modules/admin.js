@@ -36,12 +36,17 @@ export default function reducer(state = initialState, action = {}) {
 
 export const change = arg => ({ type: CHANGE, arg });
 
-export const getAdminList = () => ({
+export const getAdminList = () => (dispatch, getState) => dispatch({
     types: [ADMINLIST, ADMINLIST_SUCCESS, ''],
-    promise: (client) => client.get('/admin/all')
+    promise: (client) => client.get('/admin/all', { params: { _id: getState().auth.user._id } })
 });
 
 export const addAdmin = () => (dispatch, getState) => dispatch({
     types: ['', '', ''],
-    promise: (client) => client.post('/admin/add', { data: { _id: getState().admin.selectedAdmin } })
+    promise: (client) => client.post('/admin/add', {
+        data: {
+            _id: getState().admin.selectedAdmin,
+            selfId: getState().auth.user._id
+        }
+    })
 });

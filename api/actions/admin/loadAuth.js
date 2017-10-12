@@ -1,1 +1,1 @@
-export default (req) => Promise.resolve({ user: req.session.user || null });
+export default (req) => Promise.resolve({ user: req.token });

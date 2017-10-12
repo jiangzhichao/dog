@@ -1,6 +1,4 @@
 export default (req) => new Promise((resolve) => {
-  req.session.destroy(() => {
-    req.session = null;
+    req.token = null;
     return resolve(null);
-  });
 });

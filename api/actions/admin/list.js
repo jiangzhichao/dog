@@ -4,7 +4,7 @@ const Admin = mongoose.model('Admin');
 export default function all(req) {
 
   return new Promise((resolve, reject) => {
-    const { _id } = req.session.user;
+    const { _id } = req.query;
 
     Admin
       .findOne({ _id })

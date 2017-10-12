@@ -6,9 +6,9 @@ export default function join(req) {
   return new Promise((resolve, reject) => {
     const groupId = req.body._id;
     if (groupId) {
-      const { _id, groups = [] } = req.session.user;
+      const { _id, groups = [] } = req.body.user;
       groups.push(groupId);
-      req.session.user.groups = groups;
+      req.body.user.groups = groups;
 
       Admin.findOneAndUpdate({ _id }, { groups }, (err) => {
         if (err) reject({ msg: '添加失败' });
