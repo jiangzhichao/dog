@@ -16,6 +16,10 @@ export default class Login extends Component {
         register: PropTypes.func
     };
 
+    constructor(...arg) {
+        super(...arg);
+    }
+
     componentDidMount() {
         document.addEventListener('keydown', this._keyDown);
     }
@@ -33,7 +37,9 @@ export default class Login extends Component {
         return (
             <div>
                 <Helmet title="dog-login" />
-                <ThreeBg style={{ position: 'absolute' }} />
+                <ThreeBg
+                    style={{ position: 'absolute' }}
+                />
                 <div
                     className="login-center-content"
                     style={{
@@ -63,10 +69,12 @@ export default class Login extends Component {
                         type={'primary'}
                         onClick={this.props.login}
                     >登录</Button>
-                    <a onClick={(e) => {
-                        e.preventDefault();
-                        this.props.change({ current: 'register' });
-                    }}>去注册</a>
+                    <a
+                        onClick={(e) => {
+                            e.preventDefault();
+                            this.props.change({ current: 'register' });
+                        }}
+                    >去注册</a>
                 </div>
                 <div
                     className="login-center-content"
@@ -106,10 +114,12 @@ export default class Login extends Component {
                         type={'primary'}
                         onClick={this.props.register}
                     >注册</Button>
-                    <a onClick={(e) => {
-                        e.preventDefault();
-                        this.props.change({ current: 'login' });
-                    }}>去登录</a>
+                    <a
+                        onClick={(e) => {
+                            e.preventDefault();
+                            this.props.change({ current: 'login' });
+                        }}
+                    >去登录</a>
                 </div>
             </div>
         );
