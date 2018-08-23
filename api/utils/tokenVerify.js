@@ -4,7 +4,7 @@
 import jwt from 'jsonwebtoken';
 import dbConfig from '../config';
 
-const noVerify = ['/admin/login', '/admin/logout'];
+const noVerify = ['/admin/login', '/admin/logout', '/admin/register'];
 
 export default (req, res, next) => {
     if (noVerify.indexOf(req.path) > -1) {
