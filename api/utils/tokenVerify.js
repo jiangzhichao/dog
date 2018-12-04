@@ -17,7 +17,7 @@ export default (req, res, next) => {
                     if (req.path === '/admin/loadAuth') {
                         next();
                     } else {
-                        res.status(500).json({ msg: '登录过期，请退出重新登录' });
+                        res.status(401).json({ msg: '登录过期，请退出重新登录' });
                     }
                 } else {
                     req.token = decoded;

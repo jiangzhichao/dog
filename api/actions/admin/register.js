@@ -24,7 +24,7 @@ export default function register(req) {
             if (err) reject({ msg: '用户注册失败!', err });
 
             user.password = null;
-            req.session.user = user;
+            // req.session.user = user;
             resolve({ user });
           });
         }
